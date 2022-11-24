@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.beacademy.beacademy.model.Postagem;
+import com.beacademy.beacademy.repository.CategoriaRepository;
 import com.beacademy.beacademy.repository.PostagemRepository;
 
 @RestController
@@ -30,6 +31,9 @@ public class PostagemController {
 
 	@Autowired
 	private PostagemRepository postagemRepository;
+	
+	@Autowired
+	private CategoriaRepository categoriaRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Postagem>> getAll(){
@@ -52,16 +56,29 @@ public class PostagemController {
 	
 	@PostMapping
 	public ResponseEntity<Postagem> post(@Valid @RequestBody Postagem postagem) {
+		if (categoriaRepository.existsById(postagem.getCategoria().getId()))
 		return ResponseEntity.status(HttpStatus.CREATED)
+				
+				
 				.body(postagemRepository.save(postagem));
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
 	@PutMapping
 	public ResponseEntity<Postagem> put(@Valid @RequestBody Postagem postagem) {
-		return postagemRepository.findById(postagem.getId())
-				.map(resposta -> ResponseEntity.status(HttpStatus.OK)
-						.body(postagemRepository.save(postagem)))
-				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+if (postagemRepository.existsById(postagem.getId())){
+			
+			if (categoriaRepository.existsById(postagem.getCategoria().getId()))
+				return ResponseEntity.status(HttpStatus.OK)
+						.body(postagemRepository.save(postagem));
+			
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			
+		}			
+			
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		
 	}
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
