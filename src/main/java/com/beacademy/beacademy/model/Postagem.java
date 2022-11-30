@@ -1,12 +1,15 @@
 package com.beacademy.beacademy.model;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -39,13 +42,16 @@ public class Postagem {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date=new java.sql.Date(System.currentTimeMillis());
 	
-	@ManyToOne
-	@JsonIgnoreProperties("postagem")
-	private Categoria categoria;
 	
 	@ManyToOne
 	@JsonIgnoreProperties("postagem")
 	private Usuario usuario;
+	
+
+	@OneToMany(mappedBy = "postagem", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties("postagem")
+	private List<Comentarios> comentarios;
+	
 	
 	
 
@@ -89,13 +95,7 @@ public class Postagem {
 		this.date = date;
 	}
 
-	public Categoria getCategoria() {
-		return categoria;
-	}
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
 
 	public Usuario getUsuario() {
 		return usuario;
@@ -103,6 +103,14 @@ public class Postagem {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public List<Comentarios> getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(List<Comentarios> comentarios) {
+		this.comentarios = comentarios;
 	}
 	
 	
