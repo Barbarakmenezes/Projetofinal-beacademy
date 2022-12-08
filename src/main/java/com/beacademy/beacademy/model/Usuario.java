@@ -47,6 +47,9 @@ public class Usuario {
 	private List<Postagem> postagem;
 	
 	
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties("usuario")
+	private List<Comentarios> comentarios;
 	
 	
 
@@ -113,6 +116,20 @@ public class Usuario {
 
 	public void setPostagem(List<Postagem> postagem) {
 		this.postagem = postagem;
+	}
+
+
+
+
+	public List<Comentarios> getComentarios() {
+		return comentarios;
+	}
+
+
+
+
+	public void setComentarios(List<Comentarios> comentarios) {
+		this.comentarios = comentarios;
 	}
 	
 
